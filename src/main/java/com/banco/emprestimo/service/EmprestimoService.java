@@ -11,7 +11,7 @@ import java.util.UUID;
 @Service
 public class EmprestimoService {
 
-    //atributo imutável (final)
+
     private final EmprestimoRepository repository;
 
 
@@ -21,12 +21,11 @@ public class EmprestimoService {
 
     }
 
-    public Emprestimo criarEmprestimo(Emprestimo emprestimo, double saldoCliente) {
+    public Emprestimo criarEmprestimo(Emprestimo emprestimo) {
         emprestimo.setCodigoContrato(UUID.randomUUID().toString());
 
 
-        if (emprestimo.getValorSolicitado() <= saldoCliente * 0.5
-                && emprestimo.getQuantidadeParcelas() <= 12) {
+        if (emprestimo.getQuantidadeParcelas() <= 12) {
             emprestimo.setStatus(StatusEmprestimo.APROVADO);
             emprestimo.setDataAprovacao(LocalDate.now());
 

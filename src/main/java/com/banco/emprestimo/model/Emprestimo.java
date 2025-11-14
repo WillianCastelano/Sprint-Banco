@@ -41,8 +41,7 @@ public class Emprestimo {
     private String codigoContrato;
     private LocalDate dataAprovacao;
 
-    @NotNull
-    private Double saldoCliente;
+
 
 
     private Double valorParcela;

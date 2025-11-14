@@ -1,9 +1,10 @@
 package com.banco.emprestimo.controller;
 
 
+import com.banco.emprestimo.dto.EmprestimoDTO;
 import com.banco.emprestimo.model.Emprestimo;
 import com.banco.emprestimo.service.EmprestimoService;
-import org.springframework.context.annotation.Profile;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -17,23 +18,19 @@ public class EmprestimoController {
         this.service = service;
     }
 
-    @Profile("dev")
-    @PostMapping("/teste")
-    public Emprestimo criarEmprestimoTeste() {
-        Emprestimo emprestimo = new Emprestimo();
-        emprestimo.setCpf("12345678900");
-        emprestimo.setValorSolicitado(500.0);
-        emprestimo.setQuantidadeParcelas(6);
-        emprestimo.setSaldoCliente(1000.0);
-        emprestimo.setStatus(null);
 
-        return service.criarEmprestimo(emprestimo, emprestimo.getSaldoCliente());
-    }
 
 
     @PostMapping
-    public Emprestimo criar(@RequestBody Emprestimo emprestimo, @RequestParam double saldoCliente) {
-        return service.criarEmprestimo(emprestimo, saldoCliente);
+    public Emprestimo criar(@RequestBody @Valid EmprestimoDTO emprestimoDTO) {
+
+        Emprestimo emprestimo = new Emprestimo();
+        emprestimo.setCpf(emprestimoDTO.getCpf());
+        emprestimo.setValorSolicitado(emprestimoDTO.getValorSolicitado());
+        emprestimo.setQuantidadeParcelas(emprestimoDTO.getQuantidadeParcelas());
+
+
+        return service.criarEmprestimo(emprestimo);
     }
 
 
