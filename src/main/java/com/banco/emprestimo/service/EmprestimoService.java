@@ -24,19 +24,19 @@ public class EmprestimoService {
     public Emprestimo criarEmprestimo(Emprestimo emprestimo) {
         emprestimo.setCodigoContrato(UUID.randomUUID().toString());
 
+        emprestimo.setStatus(StatusEmprestimo.PENDENTE);
 
-        if (emprestimo.getQuantidadeParcelas() <= 12) {
-            emprestimo.setStatus(StatusEmprestimo.APROVADO);
-            emprestimo.setDataAprovacao(LocalDate.now());
 
-            double valorParcela = emprestimo.getValorSolicitado() / emprestimo.getQuantidadeParcelas();
+        if (emprestimo.getQuantidadeParcelas() != null
+                && emprestimo.getQuantidadeParcelas() > 0) {
+
+            double valorParcela =
+                    emprestimo.getValorSolicitado() / emprestimo.getQuantidadeParcelas();
+
             emprestimo.setValorParcela(valorParcela);
-
-
-        } else {
-            emprestimo.setStatus(StatusEmprestimo.REJEITADO);
-
         }
+        emprestimo.setDataAprovacao(null);
+
 
         return repository.save(emprestimo);
     }
@@ -59,5 +59,32 @@ public class EmprestimoService {
         }
 
         return emprestimos;
+    }
+
+    public Emprestimo aprovarEmprestimo(String codigoContrato) {
+
+        Emprestimo emprestimo = repository.findByCodigoContrato(codigoContrato)
+                .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado."));
+
+        emprestimo.setStatus(StatusEmprestimo.APROVADO);
+        emprestimo.setDataAprovacao(LocalDate.now());
+
+        return repository.save(emprestimo);
+    }
+
+    public Emprestimo atualizarStatus(String codigoContrato, String novoStatus) {
+
+        Emprestimo emprestimo = repository.findByCodigoContrato(codigoContrato)
+                .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado."));
+
+        StatusEmprestimo statusEnum = StatusEmprestimo.valueOf(novoStatus.toUpperCase());
+
+        emprestimo.setStatus(statusEnum);
+
+        if (statusEnum == StatusEmprestimo.APROVADO) {
+            emprestimo.setDataAprovacao(LocalDate.now());
+        }
+
+        return repository.save(emprestimo);
     }
 }

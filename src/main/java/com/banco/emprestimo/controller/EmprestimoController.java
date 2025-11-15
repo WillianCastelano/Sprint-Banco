@@ -1,6 +1,7 @@
 package com.banco.emprestimo.controller;
 
 
+import com.banco.emprestimo.dto.AtualizarStatusRequest;
 import com.banco.emprestimo.dto.EmprestimoDTO;
 import com.banco.emprestimo.model.Emprestimo;
 import com.banco.emprestimo.service.EmprestimoService;
@@ -50,4 +51,13 @@ public class EmprestimoController {
     public List<Emprestimo> listarPorCpf(@PathVariable String cpf) {
         return service.listarPorCpf(cpf);
     }
+
+    @PutMapping("/status")
+    public Emprestimo atualizarStatus(@RequestBody AtualizarStatusRequest request) {
+        return service.atualizarStatus(
+                request.getCodigoContrato(),
+                request.getStatus()
+        );
+    }
+
 }
