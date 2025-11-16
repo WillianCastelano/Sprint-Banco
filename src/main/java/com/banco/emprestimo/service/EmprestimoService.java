@@ -87,4 +87,13 @@ public class EmprestimoService {
 
         return repository.save(emprestimo);
     }
+
+    public void deletarPorContrato(String codigoContrato) {
+
+        Emprestimo emprestimo = repository.findByCodigoContrato(codigoContrato)
+                .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado."));
+
+        repository.delete(emprestimo);
+    }
+
 }

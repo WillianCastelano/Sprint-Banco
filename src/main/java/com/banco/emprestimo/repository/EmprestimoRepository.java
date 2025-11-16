@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
     Optional<Emprestimo> findByCodigoContrato(String codigoContrato);
     List<Emprestimo> findByCpf(String cpf);
+
 }

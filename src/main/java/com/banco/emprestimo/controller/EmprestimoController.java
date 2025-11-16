@@ -42,9 +42,9 @@ public class EmprestimoController {
         return service.consultarPorContrato(codigoContrato);
     }
 
-    @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        service.deletarEmprestimo(id);
+    @DeleteMapping("/contrato/{codigoContrato}")
+    public void deletar(@PathVariable String codigoContrato) {
+        service.deletarPorContrato(codigoContrato);
     }
 
     @GetMapping("/cpf/{cpf}")
