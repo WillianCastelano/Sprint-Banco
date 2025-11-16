@@ -47,9 +47,7 @@ public class EmprestimoService {
                 .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado."));
     }
 
-    public void deletarEmprestimo(Long id) {
-        repository.deleteById(id);
-    }
+
 
     public List<Emprestimo> listarPorCpf(String cpf) {
         List<Emprestimo> emprestimos = repository.findByCpf(cpf);
@@ -61,16 +59,6 @@ public class EmprestimoService {
         return emprestimos;
     }
 
-    public Emprestimo aprovarEmprestimo(String codigoContrato) {
-
-        Emprestimo emprestimo = repository.findByCodigoContrato(codigoContrato)
-                .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado."));
-
-        emprestimo.setStatus(StatusEmprestimo.APROVADO);
-        emprestimo.setDataAprovacao(LocalDate.now());
-
-        return repository.save(emprestimo);
-    }
 
     public Emprestimo atualizarStatus(String codigoContrato, String novoStatus) {
 
@@ -87,6 +75,7 @@ public class EmprestimoService {
 
         return repository.save(emprestimo);
     }
+
 
     public void deletarPorContrato(String codigoContrato) {
 

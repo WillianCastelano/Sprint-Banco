@@ -52,6 +52,8 @@ public class EmprestimoController {
         return service.listarPorCpf(cpf);
     }
 
+
+
     @PutMapping("/status")
     public Emprestimo atualizarStatus(@RequestBody AtualizarStatusRequest request) {
         return service.atualizarStatus(
