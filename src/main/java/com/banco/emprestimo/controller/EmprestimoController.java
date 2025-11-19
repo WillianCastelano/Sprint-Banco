@@ -3,9 +3,11 @@ package com.banco.emprestimo.controller;
 
 import com.banco.emprestimo.dto.AtualizarStatusRequest;
 import com.banco.emprestimo.dto.EmprestimoDTO;
-import com.banco.emprestimo.model.Emprestimo;
+import com.banco.emprestimo.dto.EmprestimoResponseDTO;
+import com.banco.emprestimo.dto.ResponseDTO;
 import com.banco.emprestimo.service.EmprestimoService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -23,42 +25,55 @@ public class EmprestimoController {
 
 
     @PostMapping
-    public Emprestimo criar(@RequestBody @Valid EmprestimoDTO emprestimoDTO) {
+    public ResponseEntity<ResponseDTO<EmprestimoResponseDTO>> criar(@RequestBody @Valid EmprestimoDTO dto) {
+        EmprestimoResponseDTO response = service.criarEmprestimo(dto);
 
-        Emprestimo emprestimo = new Emprestimo();
-        emprestimo.setCpf(emprestimoDTO.getCpf());
-        emprestimo.setValorSolicitado(emprestimoDTO.getValorSolicitado());
-        emprestimo.setQuantidadeParcelas(emprestimoDTO.getQuantidadeParcelas());
+        return  ResponseEntity.ok(
+                new ResponseDTO<>("Sucesso", response));
 
-
-        return service.criarEmprestimo(emprestimo);
     }
 
 
 
 
     @GetMapping("/{codigoContrato}")
-    public Emprestimo consultar(@PathVariable String codigoContrato) {
-        return service.consultarPorContrato(codigoContrato);
+    public ResponseEntity<ResponseDTO<EmprestimoResponseDTO>> consultar(@PathVariable String codigoContrato) {
+        EmprestimoResponseDTO response = service.consultarPorContrato(codigoContrato);
+
+        return ResponseEntity.ok(
+                new ResponseDTO<>("Sucesso", response));
     }
 
     @DeleteMapping("/contrato/{codigoContrato}")
-    public void deletar(@PathVariable String codigoContrato) {
+    public ResponseEntity<ResponseDTO<Void>> deletar(@PathVariable String codigoContrato) {
         service.deletarPorContrato(codigoContrato);
+
+        return ResponseEntity.ok(
+                new ResponseDTO<>("Registro deletado com sucesso!", null));
     }
 
     @GetMapping("/cpf/{cpf}")
-    public List<Emprestimo> listarPorCpf(@PathVariable String cpf) {
-        return service.listarPorCpf(cpf);
+    public ResponseEntity<ResponseDTO<List<EmprestimoResponseDTO>>> listarPorCpf(@PathVariable String cpf) {
+
+        List<EmprestimoResponseDTO> lista = service.listarPorCpf(cpf);
+
+        return ResponseEntity.ok(
+                new ResponseDTO<>("Sucesso", lista)
+        );
     }
 
 
 
     @PutMapping("/status")
-    public Emprestimo atualizarStatus(@RequestBody AtualizarStatusRequest request) {
-        return service.atualizarStatus(
+    public ResponseEntity<ResponseDTO<EmprestimoResponseDTO>> atualizarStatus(@RequestBody @Valid AtualizarStatusRequest request) {
+
+        EmprestimoResponseDTO response = service.atualizarStatus(
                 request.getCodigoContrato(),
                 request.getStatus()
+        );
+
+        return ResponseEntity.ok(
+                new ResponseDTO<>("Status atualizado com sucesso!", response)
         );
     }
 
