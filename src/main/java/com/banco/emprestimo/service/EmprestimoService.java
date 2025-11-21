@@ -4,6 +4,7 @@ import com.banco.emprestimo.dto.EmprestimoDTO;
 import com.banco.emprestimo.dto.EmprestimoResponseDTO;
 import com.banco.emprestimo.exception.BusinessException;
 import com.banco.emprestimo.exception.NotFoundException;
+import com.banco.emprestimo.mapper.EmprestimoMapper;
 import com.banco.emprestimo.model.Emprestimo;
 import com.banco.emprestimo.model.StatusEmprestimo;
 import com.banco.emprestimo.repository.EmprestimoRepository;
@@ -19,41 +20,38 @@ public class EmprestimoService {
 
 
     private final EmprestimoRepository repository;
+    private final EmprestimoMapper mapper;
 
 
 
-    public EmprestimoService(EmprestimoRepository repository) {
+    public EmprestimoService(EmprestimoRepository repository, EmprestimoMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
 
     }
 
     public EmprestimoResponseDTO criarEmprestimo(EmprestimoDTO dto) {
 
-
-        Emprestimo emprestimo = new Emprestimo();
-
-        emprestimo.setCpf(dto.getCpf());
-        emprestimo.setValorSolicitado(dto.getValorSolicitado());
-        emprestimo.setQuantidadeParcelas(dto.getQuantidadeParcelas());
-
         if (dto.getQuantidadeParcelas() <= 0) {
             throw new BusinessException("A quantidade de parcelas deve ser maior que zero.");
         }
 
+        Emprestimo emprestimo = mapper.toEntity(dto);
+
         emprestimo.setCodigoContrato(UUID.randomUUID().toString());
         emprestimo.setStatus(StatusEmprestimo.PENDENTE);
 
-        double valorParcela =
-                dto.getValorSolicitado() / dto.getQuantidadeParcelas();
-
-        emprestimo.setValorParcela(valorParcela);
+        emprestimo.setValorParcela(
+                dto.getValorSolicitado() / dto.getQuantidadeParcelas()
+        );
 
         emprestimo.setDataAprovacao(null);
 
         Emprestimo salvo = repository.save(emprestimo);
 
-        return toResponseDTO(salvo);
+        return mapper.toResponseDTO(salvo);
     }
+
 
 
 
@@ -61,7 +59,7 @@ public class EmprestimoService {
         Emprestimo emprestimo = repository.findByCodigoContrato(codigoContrato)
                 .orElseThrow(() -> new NotFoundException("Empréstimo não encontrado."));
 
-        return toResponseDTO(emprestimo);}
+        return mapper.toResponseDTO(emprestimo);}
 
 
 
@@ -73,7 +71,7 @@ public class EmprestimoService {
         }
 
         return lista.stream()
-                .map(this::toResponseDTO)
+                .map(mapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
@@ -97,7 +95,7 @@ public class EmprestimoService {
 
         Emprestimo salvo = repository.save(emprestimo);
 
-        return toResponseDTO(salvo);
+        return mapper.toResponseDTO(salvo);
     }
 
 
@@ -109,19 +107,5 @@ public class EmprestimoService {
     }
 
 
-    private EmprestimoResponseDTO toResponseDTO(Emprestimo e) {
-        EmprestimoResponseDTO dto = new EmprestimoResponseDTO();
-        dto.setCpf(e.getCpf());
-        dto.setCodigoContrato(e.getCodigoContrato());
-        dto.setValorSolicitado(e.getValorSolicitado());
-        dto.setQuantidadeParcelas(e.getQuantidadeParcelas());
-        dto.setValorParcela(e.getValorParcela());
-        dto.setStatus(e.getStatus().name());
-        dto.setCriadoEm(
-                e.getDataAprovacao() != null ? e.getDataAprovacao().toString() : null
-        );
-
-        return dto;
-    }
 
 }
