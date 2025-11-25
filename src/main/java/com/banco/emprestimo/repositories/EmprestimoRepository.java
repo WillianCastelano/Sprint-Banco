@@ -1,4 +1,4 @@
-package com.banco.emprestimo.repository;
+package com.banco.emprestimo.repositories;
 
 import com.banco.emprestimo.model.Emprestimo;
 import org.springframework.data.jpa.repository.JpaRepository;
