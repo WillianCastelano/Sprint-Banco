@@ -1,8 +1,8 @@
 package com.banco.emprestimo.controller;
 
-import com.banco.emprestimo.model.AuthenticationDTO;
+import com.banco.emprestimo.dto.AuthenticationDTO;
 import com.banco.emprestimo.model.LoginResponseDTO;
-import com.banco.emprestimo.model.RegisterDTO;
+import com.banco.emprestimo.dto.RegisterDTO;
 import com.banco.emprestimo.model.User;
 import com.banco.emprestimo.security.TokenService;
 import com.banco.emprestimo.repositories.UserRepository;
