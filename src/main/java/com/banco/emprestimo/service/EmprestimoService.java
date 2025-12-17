@@ -105,6 +105,10 @@ public class EmprestimoService {
         repository.delete(emprestimo);
     }
 
+    public long getTotalEmprestimos() {
+        return repository.count();
+    }
+
 
 
 }

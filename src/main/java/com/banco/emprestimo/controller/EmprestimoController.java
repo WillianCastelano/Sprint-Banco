@@ -62,6 +62,13 @@ public class EmprestimoController {
         );
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalEmprestimos() {
+        long total = service.getTotalEmprestimos();
+        return ResponseEntity.ok(total);
+    }
+
+
 
 
     @PutMapping("/status")

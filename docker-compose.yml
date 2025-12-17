@@ -1,4 +1,9 @@
+version: "3.9"
+
 services:
+  # ============================
+  # Postgres do EMPRÉSTIMO
+  # ============================
   postgres:
     image: postgres:13
     container_name: postgres_db
@@ -11,5 +16,42 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # ============================
+  # Postgres da TRANSFERÊNCIA PIX
+  # ============================
+  postgres_transferencia_pix:
+    image: postgres:16
+    container_name: postgres_transferencia_pix_v2
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: sistema_bancario
+    ports:
+      - "5434:5432"   # porta externa diferente da sua 5433
+    volumes:
+      - pix_pgdata:/var/lib/postgresql/data
+
+  # ============================
+  # API TRANSFERÊNCIA PIX (dele)
+  # ============================
+  transferencia_pix:
+    build:
+      context: C:/Users/Computador/IdeaProjects/transferencia-pix
+    container_name: transferencia_pix_api_v1
+    depends_on:
+      - postgres_transferencia_pix
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_transferencia_pix:5432/sistema_bancario
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+    ports:
+      - "8081:8085"
+    restart: always
+
+# ============================
+# Volumes
+# ============================
 volumes:
   postgres_data:
+  pix_pgdata:
