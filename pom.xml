@@ -138,6 +138,8 @@
 			<scope>test</scope>
 		</dependency>
 
+
+
         <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -164,8 +166,22 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+        </dependency>
 
 
     </dependencies>
@@ -191,6 +207,16 @@
                             <version>1.5.5.Final</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+                    </argLine>
                 </configuration>
             </plugin>
 

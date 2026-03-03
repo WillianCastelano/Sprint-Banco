@@ -18,11 +18,16 @@ import java.util.stream.Collectors;
 public class EmprestimoService {
 
 
+    //Abstração: aqui eu dependo da interface do repository, essa classe não necessita saber de detalhes como
+    //sera salvo qual DB uso só uso os métodos repository.save() , repository.findByCpf()
     private final EmprestimoRepository repository;
     private final EmprestimoMapper mapper;
 
 
 
+
+    //injeçaõ de dependencia, o spring vai criar o EnprestimoService e passar
+    //automaticamente as implementações de repository e mapper.
     public EmprestimoService(EmprestimoRepository repository, EmprestimoMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
@@ -46,6 +51,7 @@ public class EmprestimoService {
 
         emprestimo.setDataAprovacao(null);
 
+        //inversão de controle aplicad
         Emprestimo salvo = repository.save(emprestimo);
 
         return mapper.toResponseDTO(salvo);
